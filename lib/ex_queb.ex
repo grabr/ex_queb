@@ -69,17 +69,15 @@ defmodule ExQueb do
   end
 
   defp _build_date_filter(query, fld, value, :gte) do
-    where(query, [q], fragment("? >= ?", field(q, ^fld), type(^value, Ecto.DateTime)))
+    where(query, [q], fragment("? >= ?", field(q, ^fld), type(^value, :naive_datetime)))
   end
   defp _build_date_filter(query, fld, value, :lte) do
-    where(query, [q], fragment("? <= ?", field(q, ^fld), type(^value, Ecto.DateTime)))
+    where(query, [q], fragment("? <= ?", field(q, ^fld), type(^value, :naive_datetime)))
   end
 
   defp cast_date_time(value) do
-    {:ok, date} = Ecto.Date.cast(value)
-    date
-    |> Ecto.DateTime.from_date
-    |> Ecto.DateTime.to_string
+    {:ok, datetime} = DateTime.from_iso8601(value)
+    datetime |> DateTime.to_string
   end
 
   @doc """
